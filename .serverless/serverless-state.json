@@ -173,7 +173,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/s3-to-lambda/dev/1629676025136-2021-08-22T23:47:05.136Z/s3-to-lambda.zip"
+                "S3Key": "serverless/s3-to-lambda/dev/1629676636881-2021-08-22T23:57:16.881Z/s3-to-lambda.zip"
               },
               "Handler": "handler.get_joke",
               "Runtime": "python3.7",
@@ -201,43 +201,92 @@
               "CodeSha256": "nlYYM+g38wxMCf5Hjtwg722kfUNlUM4aVfqs94xd5BA="
             }
           },
-          "S3BucketAdobeassessment1": {
-            "Type": "AWS::S3::Bucket",
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "BucketName": "adobe-assessment-1",
-              "NotificationConfiguration": {
-                "LambdaConfigurations": [
-                  {
-                    "Event": "s3:ObjectCreated:*",
-                    "Function": {
-                      "Fn::GetAtt": [
-                        "GetUnderscorejokeLambdaFunction",
-                        "Arn"
-                      ]
-                    },
-                    "Filter": {
-                      "S3Key": {
-                        "Rules": [
-                          {
-                            "Name": "prefix",
-                            "Value": "input/"
-                          },
-                          {
-                            "Name": "suffix",
-                            "Value": ".tab"
-                          }
-                        ]
-                      }
-                    }
-                  }
+              "Name": "dev-s3-to-lambda",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
                 ]
+              },
+              "Policy": ""
+            }
+          },
+          "ApiGatewayResourceJoke": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "joke",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
               }
+            }
+          },
+          "ApiGatewayMethodJokeGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceJoke"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetUnderscorejokeLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
             },
             "DependsOn": [
-              "GetUnderscorejokeLambdaPermissionAdobeassessment1S3"
+              "GetUnderscorejokeLambdaPermissionApiGateway"
             ]
           },
-          "GetUnderscorejokeLambdaPermissionAdobeassessment1S3": {
+          "ApiGatewayDeployment1629676605710": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodJokeGet"
+            ]
+          },
+          "GetUnderscorejokeLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
               "FunctionName": {
@@ -247,7 +296,7 @@
                 ]
               },
               "Action": "lambda:InvokeFunction",
-              "Principal": "s3.amazonaws.com",
+              "Principal": "apigateway.amazonaws.com",
               "SourceArn": {
                 "Fn::Join": [
                   "",
@@ -256,12 +305,21 @@
                     {
                       "Ref": "AWS::Partition"
                     },
-                    ":s3:::adobe-assessment-1"
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
                   ]
                 ]
-              },
-              "SourceAccount": {
-                "Ref": "AWS::AccountId"
               }
             }
           }
@@ -282,6 +340,32 @@
             },
             "Export": {
               "Name": "sls-s3-to-lambda-dev-GetUnderscorejokeLambdaFunctionQualifiedArn"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            },
+            "Export": {
+              "Name": "sls-s3-to-lambda-dev-ServiceEndpoint"
             }
           }
         }
@@ -384,17 +468,10 @@
         "handler": "handler.get_joke",
         "events": [
           {
-            "s3": {
-              "bucket": "adobe-assessment-1",
-              "event": "s3:ObjectCreated:*",
-              "rules": [
-                {
-                  "prefix": "input/"
-                },
-                {
-                  "suffix": ".tab"
-                }
-              ]
+            "http": {
+              "path": "joke",
+              "method": "get",
+              "integration": "AWS_PROXY"
             }
           }
         ],
@@ -427,7 +504,7 @@
           "node_modules/**"
         ],
         "artifact": "/Users/spadal/s3-to-lambda/.serverless/s3-to-lambda.zip",
-        "artifactDirectoryName": "serverless/s3-to-lambda/dev/1629676025136-2021-08-22T23:47:05.136Z"
+        "artifactDirectoryName": "serverless/s3-to-lambda/dev/1629676636881-2021-08-22T23:57:16.881Z"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
@@ -442,7 +519,7 @@
   },
   "package": {
     "individually": false,
-    "artifactDirectoryName": "serverless/s3-to-lambda/dev/1629676025136-2021-08-22T23:47:05.136Z",
+    "artifactDirectoryName": "serverless/s3-to-lambda/dev/1629676636881-2021-08-22T23:57:16.881Z",
     "artifact": "s3-to-lambda.zip"
   }
 }
