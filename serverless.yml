@@ -1,0 +1,31 @@
+service: s3-to-lambda
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-east-1
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+package:
+  individually: false
+  exclude:
+    - package.json
+    - package-log.json
+    - node_modules/**
+
+functions:
+  get_joke:
+    handler: handler.get_joke
+    events: 
+      - s3:
+          bucket: adobe-assessment-1
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: input/
+            - suffix: .tab
+
+
+plugins:
+  - serverless-python-requirements
