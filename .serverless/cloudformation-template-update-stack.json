@@ -161,7 +161,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/s3-to-lambda/dev/1629676636881-2021-08-22T23:57:16.881Z/s3-to-lambda.zip"
+          "S3Key": "serverless/s3-to-lambda/dev/1629677463869-2021-08-23T00:11:03.869Z/s3-to-lambda.zip"
         },
         "Handler": "handler.get_joke",
         "Runtime": "python3.7",
@@ -179,14 +179,14 @@
         "GetUnderscorejokeLogGroup"
       ]
     },
-    "GetUnderscorejokeLambdaVersionnvApAaaekC3venZPjzd3vTg4ZmbhUHrc32hJcoCLdY": {
+    "GetUnderscorejokeLambdaVersionD1Ubpfj69GefDXU09xgF75JqLBQaP7MahsEPwBNOIMU": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetUnderscorejokeLambdaFunction"
         },
-        "CodeSha256": "nlYYM+g38wxMCf5Hjtwg722kfUNlUM4aVfqs94xd5BA="
+        "CodeSha256": "OoCkexKqVyPFGDIKsZ9M5PQUBtq2pzw9+qBK5FHMP3U="
       }
     },
     "ApiGatewayRestApi": {
@@ -262,7 +262,7 @@
         "GetUnderscorejokeLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1629676605710": {
+    "ApiGatewayDeployment1629677459086": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -324,7 +324,7 @@
     "GetUnderscorejokeLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetUnderscorejokeLambdaVersionnvApAaaekC3venZPjzd3vTg4ZmbhUHrc32hJcoCLdY"
+        "Ref": "GetUnderscorejokeLambdaVersionD1Ubpfj69GefDXU09xgF75JqLBQaP7MahsEPwBNOIMU"
       },
       "Export": {
         "Name": "sls-s3-to-lambda-dev-GetUnderscorejokeLambdaFunctionQualifiedArn"
