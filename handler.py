@@ -1,5 +1,4 @@
 import json
-import pandas
 
 def get_joke(event, context):
     print("***** Event ****")
