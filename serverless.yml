@@ -18,9 +18,11 @@ package:
 functions:
   get_joke_layer:
     handler: handler.get_joke_layer
+    layers:
+      - arn:aws:lambda:us-east-1:480915327742:layer:pandas-python3-7:2
     events: 
       - s3:
-          bucket: adobe-assessment-2
+          bucket: adobe-assessment-3
           event: s3:ObjectCreated:*
           rules:
             - prefix: input/
