@@ -71,10 +71,10 @@
         }
       }
     },
-    "GetUnderscorejokeUnderscores3LogGroup": {
+    "GetUnderscorejokeUnderscorelayerLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/s3-to-lambda-dev-get_joke_s3"
+        "LogGroupName": "/aws/lambda/s3-to-lambda-with-layer-dev-get_joke_layer"
       }
     },
     "IamRoleLambdaExecution": {
@@ -102,7 +102,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "s3-to-lambda",
+                  "s3-to-lambda-with-layer",
                   "dev",
                   "lambda"
                 ]
@@ -119,7 +119,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/s3-to-lambda-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/s3-to-lambda-with-layer-dev*:*"
                     }
                   ]
                 },
@@ -130,7 +130,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/s3-to-lambda-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/s3-to-lambda-with-layer-dev*:*:*"
                     }
                   ]
                 }
@@ -143,7 +143,7 @@
           "Fn::Join": [
             "-",
             [
-              "s3-to-lambda",
+              "s3-to-lambda-with-layer",
               "dev",
               {
                 "Ref": "AWS::Region"
@@ -154,18 +154,18 @@
         }
       }
     },
-    "GetUnderscorejokeUnderscores3LambdaFunction": {
+    "GetUnderscorejokeUnderscorelayerLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/s3-to-lambda/dev/1629677850847-2021-08-23T00:17:30.847Z/s3-to-lambda.zip"
+          "S3Key": "serverless/s3-to-lambda-with-layer/dev/1629678658951-2021-08-23T00:30:58.951Z/s3-to-lambda-with-layer.zip"
         },
-        "Handler": "handler.get_joke",
+        "Handler": "handler.get_joke_layer",
         "Runtime": "python3.7",
-        "FunctionName": "s3-to-lambda-dev-get_joke_s3",
+        "FunctionName": "s3-to-lambda-with-layer-dev-get_joke_layer",
         "MemorySize": 1024,
         "Timeout": 6,
         "Role": {
@@ -176,30 +176,30 @@
         }
       },
       "DependsOn": [
-        "GetUnderscorejokeUnderscores3LogGroup"
+        "GetUnderscorejokeUnderscorelayerLogGroup"
       ]
     },
-    "GetUnderscorejokeUnderscores3LambdaVersionfZpXqJLgFbLb1QJuqzwT08zYpkbg2zibS0DhDoAkc": {
+    "GetUnderscorejokeUnderscorelayerLambdaVersion7JksXVul1myJcPTkp4RAZAgaM0UmpXDYElVZaydE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "GetUnderscorejokeUnderscores3LambdaFunction"
+          "Ref": "GetUnderscorejokeUnderscorelayerLambdaFunction"
         },
-        "CodeSha256": "rmXwbVWDmu7/6GvcjkVXIODBI71Z2T+bcNTXzJx41WQ="
+        "CodeSha256": "dDI6yjraeKrcMKdH/sQ/Hci2o4fiuYbDat/1+5ROVY4="
       }
     },
-    "S3BucketAdobeassessment1": {
+    "S3BucketAdobeassessment2": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": "adobe-assessment-1",
+        "BucketName": "adobe-assessment-2",
         "NotificationConfiguration": {
           "LambdaConfigurations": [
             {
               "Event": "s3:ObjectCreated:*",
               "Function": {
                 "Fn::GetAtt": [
-                  "GetUnderscorejokeUnderscores3LambdaFunction",
+                  "GetUnderscorejokeUnderscorelayerLambdaFunction",
                   "Arn"
                 ]
               },
@@ -222,15 +222,15 @@
         }
       },
       "DependsOn": [
-        "GetUnderscorejokeUnderscores3LambdaPermissionAdobeassessment1S3"
+        "GetUnderscorejokeUnderscorelayerLambdaPermissionAdobeassessment2S3"
       ]
     },
-    "GetUnderscorejokeUnderscores3LambdaPermissionAdobeassessment1S3": {
+    "GetUnderscorejokeUnderscorelayerLambdaPermissionAdobeassessment2S3": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "GetUnderscorejokeUnderscores3LambdaFunction",
+            "GetUnderscorejokeUnderscorelayerLambdaFunction",
             "Arn"
           ]
         },
@@ -244,7 +244,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":s3:::adobe-assessment-1"
+              ":s3:::adobe-assessment-2"
             ]
           ]
         },
@@ -260,16 +260,16 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-s3-to-lambda-dev-ServerlessDeploymentBucketName"
+        "Name": "sls-s3-to-lambda-with-layer-dev-ServerlessDeploymentBucketName"
       }
     },
-    "GetUnderscorejokeUnderscores3LambdaFunctionQualifiedArn": {
+    "GetUnderscorejokeUnderscorelayerLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetUnderscorejokeUnderscores3LambdaVersionfZpXqJLgFbLb1QJuqzwT08zYpkbg2zibS0DhDoAkc"
+        "Ref": "GetUnderscorejokeUnderscorelayerLambdaVersion7JksXVul1myJcPTkp4RAZAgaM0UmpXDYElVZaydE"
       },
       "Export": {
-        "Name": "sls-s3-to-lambda-dev-GetUnderscorejokeUnderscores3LambdaFunctionQualifiedArn"
+        "Name": "sls-s3-to-lambda-with-layer-dev-GetUnderscorejokeUnderscorelayerLambdaFunctionQualifiedArn"
       }
     }
   }
