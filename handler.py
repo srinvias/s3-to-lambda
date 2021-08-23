@@ -1,6 +1,6 @@
 import json
 
-def get_joke(event, context):
+def get_joke_layer(event, context):
     print("***** Event ****")
     print(event)
     body = {
