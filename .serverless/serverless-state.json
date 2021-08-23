@@ -173,7 +173,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/s3-to-lambda-with-layer/dev/1629678658951-2021-08-23T00:30:58.951Z/s3-to-lambda-with-layer.zip"
+                "S3Key": "serverless/s3-to-lambda-with-layer/dev/1629679021370-2021-08-23T00:37:01.370Z/s3-to-lambda-with-layer.zip"
               },
               "Handler": "handler.get_joke_layer",
               "Runtime": "python3.7",
@@ -185,13 +185,16 @@
                   "IamRoleLambdaExecution",
                   "Arn"
                 ]
-              }
+              },
+              "Layers": [
+                "arn:aws:lambda:us-east-1:480915327742:layer:pandas-python3-7:2"
+              ]
             },
             "DependsOn": [
               "GetUnderscorejokeUnderscorelayerLogGroup"
             ]
           },
-          "GetUnderscorejokeUnderscorelayerLambdaVersion7JksXVul1myJcPTkp4RAZAgaM0UmpXDYElVZaydE": {
+          "GetUnderscorejokeUnderscorelayerLambdaVersionWEkEUtKKliqlF3HrW6U12U9lgDLyENGjdBSnCwd3LE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
@@ -201,10 +204,10 @@
               "CodeSha256": "dDI6yjraeKrcMKdH/sQ/Hci2o4fiuYbDat/1+5ROVY4="
             }
           },
-          "S3BucketAdobeassessment2": {
+          "S3BucketAdobeassessment3": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
-              "BucketName": "adobe-assessment-2",
+              "BucketName": "adobe-assessment-3",
               "NotificationConfiguration": {
                 "LambdaConfigurations": [
                   {
@@ -234,10 +237,10 @@
               }
             },
             "DependsOn": [
-              "GetUnderscorejokeUnderscorelayerLambdaPermissionAdobeassessment2S3"
+              "GetUnderscorejokeUnderscorelayerLambdaPermissionAdobeassessment3S3"
             ]
           },
-          "GetUnderscorejokeUnderscorelayerLambdaPermissionAdobeassessment2S3": {
+          "GetUnderscorejokeUnderscorelayerLambdaPermissionAdobeassessment3S3": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
               "FunctionName": {
@@ -256,7 +259,7 @@
                     {
                       "Ref": "AWS::Partition"
                     },
-                    ":s3:::adobe-assessment-2"
+                    ":s3:::adobe-assessment-3"
                   ]
                 ]
               },
@@ -278,7 +281,7 @@
           "GetUnderscorejokeUnderscorelayerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetUnderscorejokeUnderscorelayerLambdaVersion7JksXVul1myJcPTkp4RAZAgaM0UmpXDYElVZaydE"
+              "Ref": "GetUnderscorejokeUnderscorelayerLambdaVersionWEkEUtKKliqlF3HrW6U12U9lgDLyENGjdBSnCwd3LE"
             },
             "Export": {
               "Name": "sls-s3-to-lambda-with-layer-dev-GetUnderscorejokeUnderscorelayerLambdaFunctionQualifiedArn"
@@ -382,10 +385,13 @@
     "functions": {
       "get_joke_layer": {
         "handler": "handler.get_joke_layer",
+        "layers": {
+          "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"GetUnderscorejokeUnderscorelayerLambdaFunction\"][\"Properties\"][\"Layers\"]"
+        },
         "events": [
           {
             "s3": {
-              "bucket": "adobe-assessment-2",
+              "bucket": "adobe-assessment-3",
               "event": "s3:ObjectCreated:*",
               "rules": [
                 {
@@ -404,7 +410,7 @@
         "timeout": 6,
         "runtime": "python3.7",
         "vpc": {},
-        "versionLogicalId": "GetUnderscorejokeUnderscorelayerLambdaVersion7JksXVul1myJcPTkp4RAZAgaM0UmpXDYElVZaydE"
+        "versionLogicalId": "GetUnderscorejokeUnderscorelayerLambdaVersionWEkEUtKKliqlF3HrW6U12U9lgDLyENGjdBSnCwd3LE"
       }
     },
     "configValidationMode": "warn",
@@ -427,7 +433,7 @@
           "node_modules/**"
         ],
         "artifact": "/Users/spadal/s3-to-lambda/.serverless/s3-to-lambda-with-layer.zip",
-        "artifactDirectoryName": "serverless/s3-to-lambda-with-layer/dev/1629678658951-2021-08-23T00:30:58.951Z"
+        "artifactDirectoryName": "serverless/s3-to-lambda-with-layer/dev/1629679021370-2021-08-23T00:37:01.370Z"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
@@ -442,7 +448,7 @@
   },
   "package": {
     "individually": false,
-    "artifactDirectoryName": "serverless/s3-to-lambda-with-layer/dev/1629678658951-2021-08-23T00:30:58.951Z",
+    "artifactDirectoryName": "serverless/s3-to-lambda-with-layer/dev/1629679021370-2021-08-23T00:37:01.370Z",
     "artifact": "s3-to-lambda-with-layer.zip"
   }
 }
